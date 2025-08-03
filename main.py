@@ -1,32 +1,29 @@
 import os
-from dotenv import load_dotenv
-from notion_client import Client
 from notion_crud import create_item, read_items, update_item, delete_item
 
-load_dotenv()
+def menu():
+    while True:
+        print("\n=== Menu Notion CRUD ===")
+        print("[1] Listar")
+        print("[2] Nova")
+        print("[3] Atualizar status")
+        print("[4] Deletar")
+        print("[0] Sair")
+        choice = input("> ").strip()
+        
+        if choice == "1":
+            items = read_items()
+            for i, item in enumerate(items):
+                print(f"[{i}] {item['nome']} - {item['status']}")
 
-notion_token = os.getenv("NOTION_TOKEN")
-database_id = os.getenv("NOTION_DB")
-notion = Client(auth=notion_token)
+        elif choice == "2":
+            nome = input("Nome do Item: ").strip()
+            status = input("Status (padrão: Pendente): ").strip() or "Pendente"
+            tags_str = input("Tags separadas por virgula").strip()
+            tags = [t.strip() for t in tags_str.split(",")] if tags_str else []
+            page_id = create_item(nome, status, tags)
+            print(f"Item criado com ID: {page_id}")
 
-response = notion.search(filter={"property": "object", "value": "database"})
-
-for result in response["results"]:
-    print(result["id"])
-    print(result["title"])
-
-
-# Criar
-id = create_item("Estudar API do Notion", status="Pendente", tags=["python", "api"])
-print("Criado:", id)
-
-# Listar
-for item in read_items():
-    print(item)
-
-# Atualizar
-update_item(id, "Feito")
-
-# Deletar
-delete_item(id)
-
+        elif choice == "3":
+        elif choice == "4":
+        elif choice == "0":
